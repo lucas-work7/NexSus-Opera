@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexSus Opera - Entrada Periférica de Dados em Saúde</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #f0f4f8;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        header {
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        header h1 {
+            color: #0056b3;
+            font-size: 24px;
+        }
+        header p {
+            color: #666;
+            font-size: 14px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #444;
+        }
+        input[type="text"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .lgpd-box {
+            background-color: #e9f2ff;
+            border-left: 4px solid #0056b3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .lgpd-box p {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .success-message {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NexSus Opera - Dados em Saúde</h1>
+        <p>Mapeamento e Entrada Periférica de Triagem | Santa Casa de Misericórdia de Porto Alegre</p>
+    </header>
+
+    <form id="formTriagem" onsubmit="salvarProntuario(event)">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cpfCns">CPF ou Cartão SUS *</label>
+                <input type="text" id="cpfCns" placeholder="000.000.000-00" required>
+            </div>
+            <div class="form-group">
+                <label for="nomeCompleto">Nome Completo *</label>
+                <input type="text" id="nomeCompleto" placeholder="Nome do paciente" required>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dataNasc">Data de Nascimento *</label>
+                <input type="date" id="dataNasc" required>
+            </div>
+            <div class="form-group">
+                <label for="tipoSanguineo">Tipo Sanguíneo *</label>
+                <select id="tipoSanguineo" required>
+                    <option value="">Selecione...</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="alergias">Alergias Conhecidas</label>
+            <textarea id="alergias" rows="2" placeholder="Ex: Penicilina, Dipirona, Alimentos..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="comorbidades">Comorbidades / Condições Prévias</label>
+            <textarea id="comorbidades" rows="2" placeholder="Ex: Hipertensão, Diabetes, Asma..."></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="contatoNome">Contato de Emergência (Nome) *</label>
+                <input type="text" id="contatoNome" placeholder="Nome do responsável" required>
+            </div>
+            <div class="form-group">
+                <label for="contatoTel">Telefone de Emergência *</label>
+                <input type="text" id="contatoTel" placeholder="(51) 99999-9999" required>
+            </div>
+        </div>
+
+        <!-- Governança e LGPD -->
+        <div class="lgpd-box">
+            <p><strong>Termo de Consentimento e Privacidade (LGPD):</strong> Os dados recolhidos nesta entrada periférica destinam-se exclusivamente ao atendimento médico e à triagem unificada do complexo hospitalar, garantindo a confidencialidade segundo a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).</p>
+            <div class="checkbox-container">
+                <input type="checkbox" id="aceiteLgpd" required>
+                <label for="aceiteLgpd">Autorizo o processamento e a consulta dos meus dados essenciais de saúde.</label>
+            </div>
+        </div>
+
+        <button type="submit">Registar e Enviar para Triagem</button>
+    </form>
+
+    <div id="mensagemSucesso" class="success-message">
+        ✓ Dados registados com sucesso! Prontuário sincronizado com a triagem da Santa Casa.
+    </div>
+</div>
+
+<script>
+    function salvarProntuario(event) {
+        event.preventDefault();
+        
+        const cpf = document.getElementById('cpfCns').value;
+        const nome = document.getElementById('nomeCompleto').value;
+        const lgpd = document.getElementById('aceiteLgpd').checked;
+
+        if (!lgpd) {
+            alert("É necessário aceitar o termo da LGPD para prosseguir.");
+            return;
+        }
+
+        console.log("--- REGISTO DE TRIAGEM SIMULADO (NEXSUS OPERA) ---");
+        console.log("CPF/CNS:", cpf);
+        console.log("Nome:", nome);
+        console.log("LGPD Aceito:", lgpd);
+        console.log("Data/Hora Aceite:", new Date().toISOString());
+
+        document.getElementById('mensagemSucesso').style.display = 'block';
+        document.getElementById('formTriagem').reset();
+
+        setTimeout(() => {
+            document.getElementById('mensagemSucesso').style.display = 'none';
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>
